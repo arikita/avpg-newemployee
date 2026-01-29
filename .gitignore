@@ -1,0 +1,16 @@
+# Thư viện Node.js (Rất nặng, không đưa lên)
+node_modules/
+
+# Thư mục build của Frontend
+dist/
+
+# File môi trường chứa mật khẩu/biến bảo mật
+.env
+
+# Các file log của hệ thống và PM2
+*.log
+npm-debug.log*
+
+# File rác của hệ điều hành
+.DS_Store
+Thumbs.db
