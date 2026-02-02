@@ -1,6 +1,12 @@
 <template>
   <div class="portal-wrapper">
     <div class="container">
+      <a href="https://arikita.github.io/avpg-portal/" class="back-btn" title="Quay lại">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
       <div class="form-content">
         <h1>NHẬP THÔNG TIN NHÂN VIÊN</h1>
         <form @submit.prevent="generateImage">
@@ -147,6 +153,22 @@ export default {
   max-width: 100%;
   padding: 40px 0;
   margin-bottom: 20px;
+}
+
+.back-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  color: #666;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+}
+
+.back-btn:hover {
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 h1, h3 {
