@@ -112,7 +112,7 @@ export default {
 	formData.append("gender", this.employee.gender);
         formData.append("image", blob, "avatar.jpg"); // Gửi ảnh đã cắt lên
 
-        const response = await axios.post("http://10.10.100.125:3000/generate", formData, {
+        const response = await axios.post("https://avpg-newemployee.onrender.com/generate", formData, {
           responseType: "blob",
         });
 
