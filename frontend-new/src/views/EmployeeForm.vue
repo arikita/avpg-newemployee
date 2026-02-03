@@ -109,7 +109,7 @@ export default {
         formData.append("department", this.employee.department);
         formData.append("phone", this.employee.phone);
         formData.append("startDate", this.employee.startDate);
-	formData.append("gender", this.employee.gender);
+        formData.append("gender", this.employee.gender);
         formData.append("image", blob, "avatar.jpg"); // Gửi ảnh đã cắt lên
 
         const response = await axios.post("https://avpg-newemployee.onrender.com/generate", formData, {

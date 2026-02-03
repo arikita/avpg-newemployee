@@ -3,17 +3,10 @@ const multer = require("multer");
 const cors = require("cors");
 const sharp = require("sharp");
 const path = require("path");
-const fs = require("fs");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Thư mục lưu ảnh
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
 
 // Cấu hình Multer
 const storage = multer.memoryStorage();
@@ -29,7 +22,7 @@ app.post("/generate", upload.single("image"), async (req, res) => {
         const userImage = req.file ? req.file.buffer : null;
         const bgPath = path.join(__dirname, "assets", "bg.jpg");
         const logoPath = path.join(__dirname, "assets", "logo.png");
-	const prefix = (gender === "Nữ") ? "Chị" : "Anh";
+        const prefix = (gender === "Nữ") ? "Chị" : "Anh";
 
         // Kiểm tra ảnh đại diện
         if (!userImage) {
@@ -38,34 +31,34 @@ app.post("/generate", upload.single("image"), async (req, res) => {
 
         // Xử lý ảnh đại diện
         const avatar = await sharp(userImage)
-	  .resize(200, 200, {
-	  	fit: 'cover',
-	  	position: 'center'
-	  })
-	  .png()
-	  .composite([{
-	    input: Buffer.from(`<svg width="200" height="200"><circle cx="100" cy="100" r="100" fill="white"/></svg>`),
-	    blend: 'dest-in'
-	  }])
-	  .toBuffer();
+            .resize(200, 200, {
+                fit: 'cover',
+                position: 'center'
+            })
+            .png()
+            .composite([{
+                input: Buffer.from(`<svg width="200" height="200"><circle cx="100" cy="100" r="100" fill="white"/></svg>`),
+                blend: 'dest-in'
+            }])
+            .toBuffer();
 
         // Load background và logo
         const bgImage = await sharp(bgPath).resize(1000, 700).toBuffer();
         const logo = await sharp(logoPath).resize(300).toBuffer();
 
-	const width = 1000, height = 700;
+        const width = 1000, height = 700;
 
-	//Dinh dang ngay thang
-	function formatDateYMDtoDMY(dateStr) {
-	   if (!dateStr) return '';
-	   const [yyyy, mm, dd] = dateStr.split('-');
-	   return `${dd}-${mm}-${yyyy}`;
-	}
+        //Dinh dang ngay thang
+        function formatDateYMDtoDMY(dateStr) {
+            if (!dateStr) return '';
+            const [yyyy, mm, dd] = dateStr.split('-');
+            return `${dd}-${mm}-${yyyy}`;
+        }
 
-	const formStartDate = formatDateYMDtoDMY(startDate);
+        const formStartDate = formatDateYMDtoDMY(startDate);
 
-	// Tạo SVG chứa nền và thông tin
-    	const textSVG = `
+        // Tạo SVG chứa nền và thông tin
+        const textSVG = `
    	   <svg width="${width}" height="${height}" >
         	<rect width="100%" height="100%" fill="none" />
 	        <text x="280" y="280" font-size="50" fill="#054256" font-weight="bold">WELCOME NEW STAFF</text>
@@ -97,24 +90,20 @@ app.post("/generate", upload.single("image"), async (req, res) => {
      	 </svg>
 	`;
 
-	// Chuyen SVG thanh PNG co nen trong suot
-	const svgBuffer = await sharp(Buffer.from(textSVG))
-	    .ensureAlpha()
-	    .toBuffer();
+        // Chuyen SVG thanh PNG co nen trong suot
+        const svgBuffer = await sharp(Buffer.from(textSVG))
+            .ensureAlpha()
+            .toBuffer();
 
         // Tạo ảnh kết quả
         const finalImage = await sharp(bgImage)
             .composite([
                 { input: avatar, top: 100, left: 50 },
                 { input: logo, top: 30, left: 520 },
-		{ input: svgBuffer, top: 0, left: 0 }
+                { input: svgBuffer, top: 0, left: 0 }
             ])
-	    .png()
+            .png()
             .toBuffer();
-
-	const fileName = `employee_${Date.now()}.png`;
-	const filePath = path.join(__dirname, "uploads", fileName);
-	fs.writeFileSync(filePath, finalImage);
 
         res.set("Content-Type", "image/png");
         res.send(finalImage);
