@@ -10,7 +10,24 @@ app.use(express.json());
 
 // Cấu hình Multer
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 } // Giới hạn file 5MB để tránh tràn RAM
+});
+
+// Hàm làm sạch chuỗi để tránh lỗi SVG (XML Injection)
+function escapeXml(unsafe) {
+    if (typeof unsafe !== 'string') return '';
+    return unsafe.replace(/[<>&'"]/g, c => {
+        switch (c) {
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '&': return '&amp;';
+            case '\'': return '&apos;';
+            case '"': return '&quot;';
+        }
+    });
+}
 
 // API nhận thông tin và tạo ảnh
 app.post("/generate", upload.single("image"), async (req, res) => {
@@ -18,7 +35,14 @@ app.post("/generate", upload.single("image"), async (req, res) => {
         console.log("📥 Nhận request tạo ảnh...");
 
         // Load dữ liệu
-        const { name, position, department, phone, startDate, gender } = req.body;
+        let { name, position, department, phone, startDate, gender } = req.body;
+
+        // Làm sạch dữ liệu đầu vào (Sanitization)
+        name = escapeXml(name);
+        position = escapeXml(position);
+        department = escapeXml(department);
+        phone = escapeXml(phone);
+
         const userImage = req.file ? req.file.buffer : null;
         const bgPath = path.join(__dirname, "assets", "bg.jpg");
         const logoPath = path.join(__dirname, "assets", "logo.png");
@@ -76,10 +100,10 @@ app.post("/generate", upload.single("image"), async (req, res) => {
 	        <text x="50" y="540" font-size="24" fill="#000">Ngày bắt đầu:</text>
 
        		 <!-- Nội dung bên phải -->
-	        <text x="250" y="420" font-size="24" fill="#ff0000" font-weight="bold">${req.body.name}</text>
-	        <text x="250" y="450" font-size="24" fill="#000" font-weight="bold">${req.body.position}</text>
-	        <text x="250" y="480" font-size="24" fill="#000" font-weight="bold">${req.body.department}</text>
-	        <text x="250" y="510" font-size="24" fill="#000" font-weight="bold">${req.body.phone}</text>
+	        <text x="250" y="420" font-size="24" fill="#ff0000" font-weight="bold">${name}</text>
+	        <text x="250" y="450" font-size="24" fill="#000" font-weight="bold">${position}</text>
+	        <text x="250" y="480" font-size="24" fill="#000" font-weight="bold">${department}</text>
+	        <text x="250" y="510" font-size="24" fill="#000" font-weight="bold">${phone}</text>
 	        <text x="250" y="540" font-size="24" fill="#000" font-weight="bold">${formStartDate}</text>
 
 	        <!-- Dòng chữ dưới có wrap text -->
