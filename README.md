@@ -150,7 +150,7 @@ pm2 logs backend
 
 ## Quản lý từ server
 
-Repository được clone tại server `kontumenery` (`clasvr`):
+Repository được clone tại server `clasvr`:
 ```
 /home/clasvr/projects/avpg-newemployee/
 ```

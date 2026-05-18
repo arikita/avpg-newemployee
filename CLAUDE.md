@@ -57,7 +57,7 @@ git push
 - **Crop ảnh** dùng `vue-cropperjs`, output 500×500px JPEG trước khi gửi lên backend.
 - Backend dùng **Sharp** để ghép ảnh — không có database, không có lưu file, trả về blob thẳng.
 - **PM2 trên dksvr** (`/home/dksvr/Documents/welcome-employee/`) là môi trường nội bộ cũ, backend production hiện đang trên Render.
-- Repo SSH alias: `github-avpg-newemployee` (deploy key trên server `kontumenery`).
+- Repo SSH alias: `github-avpg-newemployee` (deploy key trên server `clasvr`).
 
 ## Liên hệ hệ thống
 - Portal tuyển dụng: https://arikita.github.io/avpg-portal/ (repo: `arikita/avpg-portal`)
