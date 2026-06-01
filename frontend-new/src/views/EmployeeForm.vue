@@ -28,7 +28,7 @@
 
           <div class="file-upload-section">
             <span class="input-label">Ảnh đại diện (Kéo để căn chỉnh)</span>
-            <input type="file" @change="setImage" required class="file-input" accept="image/*" />
+            <input type="file" @change="setImage" required class="file-input" accept="image/*,.jfif,.jpe,.pjp,.pjpeg" />
             
             <div v-if="imgSrc" class="cropper-wrapper">
               <vue-cropper
@@ -79,7 +79,16 @@ export default {
   methods: {
     setImage(e) {
       const file = e.target.files[0];
-      if (!file.type.includes("image/")) return;
+      if (!file) return;
+      // .jfif/.jpe... thực chất là JPEG; vài máy trả file.type rỗng nên fallback kiểm tra đuôi file
+      const isImage =
+        file.type.includes("image/") ||
+        /\.(jpe?g|jfif|jpe|pjp|pjpeg|png|gif|bmp|webp)$/i.test(file.name);
+      if (!isImage) {
+        alert("File không hợp lệ! Vui lòng chọn file ảnh (JPG, JFIF, PNG...).");
+        e.target.value = ""; // reset input để chọn lại được file vừa rồi
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (event) => {
         this.imgSrc = event.target.result;
