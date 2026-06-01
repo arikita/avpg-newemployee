@@ -1,8 +1,26 @@
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
-const sharp = require("sharp");
 const path = require("path");
+const fs = require("fs");
+const os = require("os");
+
+// --- Cấu hình font tiếng Việt cho Sharp/librsvg ---
+// Render không có sẵn font phủ đủ tiếng Việt nên dấu dễ vỡ / font xấu.
+// Nhúng Be Vietnam Pro trong assets/fonts và trỏ fontconfig vào đó.
+// PHẢI set FONTCONFIG_FILE TRƯỚC khi require("sharp").
+const fontDir = path.join(__dirname, "assets", "fonts");
+const fontConfigContent = `<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <dir>${fontDir}</dir>
+  <cachedir>${path.join(os.tmpdir(), "avpg-fontconfig-cache")}</cachedir>
+</fontconfig>`;
+const fontConfigPath = path.join(os.tmpdir(), "avpg-fonts.conf");
+fs.writeFileSync(fontConfigPath, fontConfigContent);
+process.env.FONTCONFIG_FILE = fontConfigPath;
+
+const sharp = require("sharp");
 
 const app = express();
 app.use(cors());
@@ -84,6 +102,7 @@ app.post("/generate", upload.single("image"), async (req, res) => {
         // Tạo SVG chứa nền và thông tin
         const textSVG = `
    	   <svg width="${width}" height="${height}" >
+        	<style>text, tspan { font-family: 'Be Vietnam Pro', sans-serif; }</style>
         	<rect width="100%" height="100%" fill="none" />
 	        <text x="280" y="280" font-size="50" fill="#054256" font-weight="bold">WELCOME NEW STAFF</text>
 
