@@ -102,7 +102,7 @@ app.post("/generate", upload.single("image"), async (req, res) => {
         // Tạo SVG chứa nền và thông tin
         const textSVG = `
    	   <svg width="${width}" height="${height}" >
-        	<style>text, tspan { font-family: 'Be Vietnam Pro', sans-serif; }</style>
+        	<style>text, tspan { font-family: 'Philosopher', sans-serif; }</style>
         	<rect width="100%" height="100%" fill="none" />
 	        <text x="280" y="280" font-size="50" fill="#054256" font-weight="bold">WELCOME NEW STAFF</text>
 
@@ -126,7 +126,7 @@ app.post("/generate", upload.single("image"), async (req, res) => {
 	        <text x="250" y="540" font-size="24" fill="#000" font-weight="bold">${formStartDate}</text>
 
 	        <!-- Dòng chữ dưới có wrap text -->
-	        <text x="500" y="600" font-size="24" fill="#333" text-anchor="middle">
+	        <text x="500" y="600" font-size="20" fill="#333" text-anchor="middle">
 	           <tspan x="500" dy="0">An Việt Phát Group tin tưởng và kỳ vọng ${prefix} sẽ phát huy tối đa năng lực chuyên môn, không</tspan>
 	           <tspan x="500" dy="1.4em">ngừng học hỏi, phát triển và gặt hái nhiều thành công trong quá trình đồng hành cùng Công ty.</tspan>
         	</text>
